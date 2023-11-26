@@ -1,20 +1,17 @@
-package testserver
+package server
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"time"
 )
 
 type TestOpts struct {
-  Message string
-  Fail bool
-  Delay time.Duration
-  Port int
+	Message string
+	Fail    bool
+	Delay   time.Duration
+	Port    int
 }
-
-
 
 // TestServer starts a test server that will respond to requests with the given message.
 // paramaters: TestOpts
@@ -31,51 +28,52 @@ type TestOpts struct {
 //
 // example:
 // kill, err := TestServer(TestOpts{
-//   "hello", 
-//   false, 
-//   time.Duration(time.Duration(10).Seconds()), 
+//   "hello",
+//   false,
+//   time.Duration(time.Duration(10).Seconds()),
 //   8080,
 // })
-func TestServer(opts TestOpts) (func() error, error) {
+func TestServer(opts TestOpts) error {
 
-  ch := make(chan error, 1)
+	fmt.Println("server started")
+	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("got request")
+		time.Sleep(opts.Delay)
 
-  http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if opts.Fail {
+			http.Error(
+				w,
+				"Server intentionally failed",
+				http.StatusInternalServerError,
+			)
+		} else {
+			_, err := w.Write([]byte(opts.Message))
+			if err != nil {
+				http.Error(
+					w,
+					"Server failed to respond",
+					http.StatusInternalServerError,
+				)
+			}
+		}
 
-    time.Sleep(opts.Delay)
+	})
 
-    if opts.Fail {
-      http.Error(
-        w, 
-        "Server intentionally failed", 
-        http.StatusInternalServerError,
-      )
-    } else {
-      _, err := w.Write([]byte(opts.Message))
-      if err != nil {
-        ch <- err
-      }
-    }    
+	go func() {
+		err := http.ListenAndServe(fmt.Sprintf(":%d", opts.Port), nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}()
 
-  })
+	return nil
+}
 
-  server := &http.Server{Addr: fmt.Sprintf(":%d", opts.Port)}
-  
-  go func() {
-    if err := server.ListenAndServe(); err != nil {
-      ch <- err
-      close(ch)
-    }
-  }()
-  
-  kill := func() error {
-    if err := server.Shutdown(context.TODO()); err != nil {
-      return err
-    }
-    return nil
-  }
-
-  err := <- ch
-
-  return kill, err
+func main() {
+	TestServer(TestOpts{
+		"hello",
+		false,
+		time.Duration(2 * time.Second),
+		8085,
+	})
 }
