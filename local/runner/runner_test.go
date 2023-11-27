@@ -1,7 +1,6 @@
 package runner
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -9,42 +8,49 @@ import (
 )
 
 func TestCall(t *testing.T) {
+
 	code, err := makeRequest("https://random-word-api.herokuapp.com/languages", 10)
+
 	if err != nil {
 		t.Errorf("Error making request: %s", err)
 	}
+
 	if code != 200 {
 		t.Errorf("Expected 200, got %d", code)
 	}
+
 }
 
-// func TestCallServer(t *testing.T) {
-//   serverOpts := server.TestOpts{
-//     Message: "hello",
-//     Fail:    false,
-//     Delay:   1 * time.Second,
-//     Port:    8085,
-//   }
-//
-//   err := server.TestServer(serverOpts)
-//
-//   if err != nil {
-//     t.Errorf("Error starting server: %s", err)
-//   }
-//   code, err := makeRequest("http://localhost:8085/hello", 10)
-//   time.Sleep(10 * time.Second)
-//   if err != nil {
-//     t.Errorf("Error making request: %s", err)
-//   }
-//   if code != 200 {
-//     t.Errorf("Expected 200, got %d", code)
-//   } else {
-//     fmt.Println(code)
-//   }
-// }
+func TestCallServer(t *testing.T) {
 
-func TestFailingServer(t *testing.T) {
-	fmt.Println("test running")
+  root := "/"
+
+  serverOpts := server.TestOpts{
+    Message: "test1",
+    Fail:    false,
+    Delay:   1 * time.Second,
+    Port:    8085,
+    Rout:    root,
+  }
+
+  err := server.TestServer(serverOpts)
+
+  if err != nil {
+    t.Errorf("Error starting server: %s", err)
+  }
+  code, err := makeRequest("http://localhost:8085" + root, 10)
+  time.Sleep(10 * time.Second)
+  if err != nil {
+    t.Errorf("Error making request: %s", err)
+  }
+  if code != 200 {
+    t.Errorf("Expected 200, got %d", code)
+  } 
+}
+
+func TestRunner(t *testing.T) {
+
+  rout := "/test2"
 	rate := 1.1
 
 	serverOpts := server.TestOpts{
@@ -52,10 +58,11 @@ func TestFailingServer(t *testing.T) {
 		Fail:    false,
 		Delay:   1 * time.Second,
 		Port:    8086,
+    Rout:    rout,
 	}
 
 	testOpts := Opts{
-		Path:         "http://localhost:8086/hello",
+		Path:         "http://localhost:8086" + rout,
 		Time:         10,
 		Users:        10,
 		Timeout:      10,
@@ -65,12 +72,10 @@ func TestFailingServer(t *testing.T) {
 
 	err := server.TestServer(serverOpts)
 
-	fmt.Println("server isn't blocking")
 
 	if err != nil {
 		t.Errorf("Error starting server: %s", err)
 	}
-	fmt.Println("server starting")
 
 	results, fails := Run(testOpts)
 
@@ -79,7 +84,45 @@ func TestFailingServer(t *testing.T) {
 	}
 
 	if len(results) != 100 {
-    fmt.Println(results)
-		t.Errorf("Expected 10 results, got %d", len(results))
+		t.Errorf("Expected 100 results, got %d", len(results))
+	}
+}
+
+func TestCallingFailingServer(t *testing.T) {
+
+  rout := "/test3"
+	rate := 1.1
+
+	serverOpts := server.TestOpts{
+		Message: "you're a failure",
+		Fail:    true,
+		Delay:   1 * time.Second,
+		Port:    8087,
+    Rout:    rout,
+	}
+
+	testOpts := Opts{
+		Path:         "http://localhost:8087" + rout,
+		Time:         10,
+		Users:        10,
+		Timeout:      10,
+		SuccessCodes: []int{200},
+		Rate:         &rate,
+	}
+
+  err := server.TestServer(serverOpts)
+
+  if err != nil {
+    t.Errorf("Error starting server: %s", err)
+  }
+
+	results, _ := Run(testOpts)
+
+	if CountFailures(results) != 100 {
+		t.Errorf("Expected 100 fails, got %d", CountFailures(results))
+	}
+
+	if len(results) != 100 {
+		t.Errorf("Expected 100 results, got %d", len(results))
 	}
 }

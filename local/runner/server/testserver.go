@@ -11,6 +11,7 @@ type TestOpts struct {
 	Fail    bool
 	Delay   time.Duration
 	Port    int
+  Rout    string
 }
 
 // TestServer starts a test server that will respond to requests with the given message.
@@ -23,11 +24,13 @@ type TestOpts struct {
 //  the amount of time to wait before responding
 // port: int
 //  the port to listen on
+// root: string
+//  the root path to listen on
 // returns:
-//  a function that will stop the server
+//  error if the server fails to start
 //
 // example:
-// kill, err := TestServer(TestOpts{
+// err := TestServer(TestOpts{
 //   "hello",
 //   false,
 //   time.Duration(time.Duration(10).Seconds()),
@@ -35,7 +38,7 @@ type TestOpts struct {
 // })
 func TestServer(opts TestOpts) error {
 
-	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(opts.Rout, func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(opts.Delay)
 
 		if opts.Fail {

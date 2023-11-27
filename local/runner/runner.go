@@ -1,7 +1,6 @@
 package runner
 
 import (
-	"fmt"
 	"net/http"
 	"sync"
 	"time"
@@ -89,14 +88,14 @@ func Run(opts Opts) ([]Result, int) {
 		for value := range resultsCh {
 
 			results = append(results, value)
-      fmt.Println(value)
-      fmt.Println("appended")
 
 		}
 		resultsGroup.Done()
 
 	}()
 
+	resultsGroup.Wait()
+	failsGroup.Wait()
 	return results, fails
 }
 
@@ -114,7 +113,7 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 
 		start := time.Now()
 		result, err := makeRequest(opts.Path, opts.Timeout)
-		if err != nil {
+		if err != nil || !contains(opts.SuccessCodes, result) || result != http.StatusOK {
 
 			failsCh <- 1
 
@@ -137,7 +136,9 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 		}
 
 		if opts.Rate != nil {
+
 			time.Sleep(time.Duration(1 / *opts.Rate) * time.Second)
+
 		}
 	}
 }
@@ -169,6 +170,12 @@ func makeRequest(path string, timeout int) (int, error) {
 }
 
 // contains checks if a slice of integers contains a given integer.
+//
+// Parameters:
+//   - slice: []int
+//     The slice of integers to check.
+//   - value: int
+//     The integer to check for.
 func contains(slice []int, value int) bool {
 	for _, item := range slice {
 		if item == value {
