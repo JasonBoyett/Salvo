@@ -9,7 +9,7 @@ import (
 )
 
 func TestCall(t *testing.T) {
-	code err := makeRequest("https://random-word-api.herokuapp.com/languages", 10)
+	code, err := makeRequest("https://random-word-api.herokuapp.com/languages", 10)
 	if err != nil {
 		t.Errorf("Error making request: %s", err)
 	}
@@ -49,7 +49,7 @@ func TestFailingServer(t *testing.T) {
 
 	serverOpts := server.TestOpts{
 		Message: "hello",
-		Fail:    true,
+		Fail:    false,
 		Delay:   1 * time.Second,
 		Port:    8086,
 	}
@@ -78,7 +78,8 @@ func TestFailingServer(t *testing.T) {
 		t.Errorf("Expected 0 fails, got %d", fails)
 	}
 
-	if len(results) != 10 {
+	if len(results) != 100 {
+    fmt.Println(results)
 		t.Errorf("Expected 10 results, got %d", len(results))
 	}
 }

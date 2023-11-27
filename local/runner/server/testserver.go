@@ -35,9 +35,7 @@ type TestOpts struct {
 // })
 func TestServer(opts TestOpts) error {
 
-	fmt.Println("server started")
 	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("got request")
 		time.Sleep(opts.Delay)
 
 		if opts.Fail {
@@ -67,13 +65,4 @@ func TestServer(opts TestOpts) error {
 	}()
 
 	return nil
-}
-
-func main() {
-	TestServer(TestOpts{
-		"hello",
-		false,
-		time.Duration(2 * time.Second),
-		8085,
-	})
 }

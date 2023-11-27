@@ -52,27 +52,50 @@ func Run(opts Opts) ([]Result, int) {
 	resultsCh := make(chan Result)
 
 	var wg sync.WaitGroup
+	var failsGroup sync.WaitGroup
+	var resultsGroup sync.WaitGroup
+
+	defer failsGroup.Wait()
+	defer resultsGroup.Wait()
 
 	for i := 0; i < opts.Users; i++ {
 
 		wg.Add(1)
-		fmt.Println("starting user")
 		go simUser(opts, &wg, failsCh, resultsCh)
 
 	}
 
-	// go func() {
-	// 	wg.Wait()
-	// 	close(failsCh)
-	// 	close(resultsCh)
-	// }()
+	go func() {
 
-	for value := range failsCh {
-		fails += value
-	}
-	for value := range resultsCh {
-		results = append(results, value)
-	}
+		wg.Wait()
+		close(failsCh)
+		close(resultsCh)
+
+	}()
+
+	failsGroup.Add(1)
+	go func() {
+
+		for value := range failsCh {
+			fails += value
+		}
+		failsGroup.Done()
+
+	}()
+
+	resultsGroup.Add(1)
+	go func() {
+
+		for value := range resultsCh {
+
+			results = append(results, value)
+      fmt.Println(value)
+      fmt.Println("appended")
+
+		}
+		resultsGroup.Done()
+
+	}()
 
 	return results, fails
 }
@@ -80,22 +103,19 @@ func Run(opts Opts) ([]Result, int) {
 func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<- Result) {
 
 	defer wg.Done()
-	fmt.Println("simulating user")
 	startTime := time.Now()
 
-  for {
+	for {
 
 		elapsedTime := time.Since(startTime).Seconds()
 		if elapsedTime >= float64(opts.Time) {
 			break
 		}
-     
-		fmt.Println("starting loop")
+
 		start := time.Now()
 		result, err := makeRequest(opts.Path, opts.Timeout)
 		if err != nil {
 
-			fmt.Println("writing error")
 			failsCh <- 1
 
 			resultsCh <- Result{
@@ -104,28 +124,22 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 				Success: false,
 				Code:    result,
 			}
-      fmt.Println("error written")
 
 		} else {
 
-			fmt.Println("writing success")
 			resultsCh <- Result{
 				Start:   start,
 				End:     time.Now(),
 				Success: true,
 				Code:    result,
 			}
-      fmt.Println("success written")
 
 		}
 
 		if opts.Rate != nil {
-			fmt.Println("sleeping")
 			time.Sleep(time.Duration(1 / *opts.Rate) * time.Second)
 		}
-		fmt.Println("loop done")
 	}
-	fmt.Println("user done")
 }
 
 // makeRequest makes a GET request to the given path with a specified timeout.
@@ -143,7 +157,6 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 //     An error if one occurred during the request.
 func makeRequest(path string, timeout int) (int, error) {
 
-	fmt.Println("makiing call")
 	client := &http.Client{Timeout: time.Duration(timeout) * time.Second}
 
 	response, err := client.Get(path)
@@ -152,7 +165,6 @@ func makeRequest(path string, timeout int) (int, error) {
 	}
 
 	defer response.Body.Close()
-	fmt.Println("request closed")
 	return response.StatusCode, nil
 }
 
