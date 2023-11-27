@@ -20,7 +20,7 @@ type Opts struct {
 	SuccessCodes []int
 	// Rate is the rate in requests per second. If nil,
 	// the requests will be made as fast as possible
-	Rate *float64 //Rate is a pointer so that it can be nil
+	Rate *float64 // Rate is a pointer so that it can be nil
 }
 
 // Run executes the load test with the given options.
@@ -31,19 +31,18 @@ type Opts struct {
 // Parameters:
 //   - opts: Opts
 //     The options for the load test.
-//     - Path: string
-//       The path to make the request to.
-//     - Time: int
-//       The duration in seconds to run the test for.
-//     - Users: int
-//       The number of users to simulate.
-//     - Timeout: int
-//       The timeout in seconds for each request.
-//     - Rate: *float64
-//       The rate in requests per second.
-//       If nil, the requests will be made as fast as possible.
+//   - Path: string
+//     The path to make the request to.
+//   - Time: int
+//     The duration in seconds to run the test for.
+//   - Users: int
+//     The number of users to simulate.
+//   - Timeout: int
+//     The timeout in seconds for each request.
+//   - Rate: *float64
+//     The rate in requests per second.
+//     If nil, the requests will be made as fast as possible.
 func Run(opts Opts) ([]Result, int) {
-
 	results := make([]Result, 0)
 	fails := 0
 
@@ -65,33 +64,25 @@ func Run(opts Opts) ([]Result, int) {
 	}
 
 	go func() {
-
 		wg.Wait()
 		close(failsCh)
 		close(resultsCh)
-
 	}()
 
 	failsGroup.Add(1)
 	go func() {
-
 		for value := range failsCh {
 			fails += value
 		}
 		failsGroup.Done()
-
 	}()
 
 	resultsGroup.Add(1)
 	go func() {
-
 		for value := range resultsCh {
-
 			results = append(results, value)
-
 		}
 		resultsGroup.Done()
-
 	}()
 
 	resultsGroup.Wait()
@@ -100,7 +91,6 @@ func Run(opts Opts) ([]Result, int) {
 }
 
 func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<- Result) {
-
 	defer wg.Done()
 	startTime := time.Now()
 
@@ -125,20 +115,16 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 			}
 
 		} else {
-
 			resultsCh <- Result{
 				Start:   start,
 				End:     time.Now(),
 				Success: true,
 				Code:    result,
 			}
-
 		}
 
 		if opts.Rate != nil {
-
 			time.Sleep(time.Duration(1 / *opts.Rate) * time.Second)
-
 		}
 	}
 }
@@ -157,7 +143,6 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 //   - error
 //     An error if one occurred during the request.
 func makeRequest(path string, timeout int) (int, error) {
-
 	client := &http.Client{Timeout: time.Duration(timeout) * time.Second}
 
 	response, err := client.Get(path)
