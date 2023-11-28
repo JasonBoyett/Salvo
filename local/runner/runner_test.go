@@ -8,13 +8,22 @@ import (
 )
 
 func TestCall(t *testing.T) {
-	code, err := makeRequest("https://random-word-api.herokuapp.com/languages", 10)
+	response, err := makeRequest("https://random-word-api.herokuapp.com/languages", 10)
 	if err != nil {
 		t.Errorf("Error making request: %s", err)
 	}
 
+	// Testing the responde code
+	code := response.code
+
 	if code != 200 {
 		t.Errorf("Expected 200, got %d", code)
+	}
+
+	// Testing the response body
+	body := response.body
+	if body != `["es","zh","it","de"]` {
+		t.Errorf(`Expected ["es","zh","it","de"], got %s`, body)
 	}
 }
 
@@ -33,7 +42,8 @@ func TestCallServer(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error starting server: %s", err)
 	}
-	code, err := makeRequest("http://localhost:8085"+root, 10)
+	response, err := makeRequest("http://localhost:8085"+root, 10)
+	code := response.code
 	time.Sleep(10 * time.Second)
 	if err != nil {
 		t.Errorf("Error making request: %s", err)

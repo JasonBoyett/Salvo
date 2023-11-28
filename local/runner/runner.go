@@ -139,7 +139,7 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 // Contains the completed response
 //
 // Body is a string of the enitre response body
-// Rather than a io.CloseReader and so on
+// Rather than a io.ReadCloser
 type finalResponse struct {
 	code int    // The http response code
 	body string // The response body
