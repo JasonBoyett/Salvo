@@ -13,6 +13,8 @@ type Result struct {
 	Success bool
 	// Code is the HTTP status code of the response
 	Code int
+	// The response body
+	Body string
 }
 
 func (r Result) Duration() time.Duration {
