@@ -11,7 +11,7 @@ type TestOpts struct {
 	Fail    bool
 	Delay   time.Duration
 	Port    int
-	Rout    string
+	Route    string
 }
 
 // TestServer starts a test server that will respond to requests with the given message.
@@ -49,7 +49,7 @@ type TestOpts struct {
 //	  8080,
 //	})
 func TestServer(opts TestOpts) error {
-	http.HandleFunc(opts.Rout, func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(opts.Route, func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(opts.Delay)
 
 		if opts.Fail {

@@ -64,3 +64,15 @@ The CLI application will be a wrapper around the base load testing library
 and will be the only part of the base application that will use anything outside of 
 the Go standard library.
 
+## Demo
+To see a quick demo of Salvo, clone the repo and run the following commands:
+```shell
+cd demo
+go run demo
+```
+This will run a quick cli demo that will allow you to run a load test on the url 
+of your choice.
+You will be prompted to enter the url you would like to test,
+the number of simulated users you would like to use, 
+the rate at which you would like the simulated users to make requests,
+the time before requests should timeout, and the duration of the test.
