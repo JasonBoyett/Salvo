@@ -13,10 +13,12 @@ type Opts struct {
 	Users int
 	Timeout int
 	SuccessCodes []int
+
 	// If Rate is nil, the requests will be made as fast as possible
 	Rate *float64 
 	// Body is a string containing the result body
 	Body string
+
 }
 
 // Run executes the load test with the given options.

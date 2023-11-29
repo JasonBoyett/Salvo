@@ -49,7 +49,9 @@ type TestOpts struct {
 //	  8080,
 //	})
 func TestServer(opts TestOpts) error {
+
 	http.HandleFunc(opts.Route, func(w http.ResponseWriter, r *http.Request) {
+    
 		time.Sleep(opts.Delay)
 
 		if opts.Fail {

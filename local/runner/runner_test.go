@@ -18,7 +18,6 @@ func TestCall(t *testing.T) {
 
 	if code != 200 {
 		t.Errorf("Expected 200, got %d", code)
-	}
 }
 
 func TestCallServer(t *testing.T) {
@@ -48,7 +47,9 @@ func TestCallServer(t *testing.T) {
 }
 
 func TestRunner(t *testing.T) {
+  
 	route := "/test2"
+
 	rate := 1.1
 
 	serverOpts := server.TestOpts{
@@ -85,6 +86,7 @@ func TestRunner(t *testing.T) {
 }
 
 func TestCallingFailingServer(t *testing.T) {
+  
 	route := "/test3"
 	rate := 1.1
 
