@@ -7,23 +7,18 @@ import (
 	"time"
 )
 
-// Opts is a struct that contains the options for the runner.
 type Opts struct {
-	// Path is the path to make the request to
 	Path string
-	// Time is the time in seconds to run the test for
 	Time int
-	// Users is the number of users to simulate
 	Users int
-	// Timeout is the timeout in seconds for each request
 	Timeout int
-	// SuccessCodes is a slice of success codes
 	SuccessCodes []int
+
+	// If Rate is nil, the requests will be made as fast as possible
+	Rate *float64 
 	// Body is a string containing the result body
 	Body string
-	// Rate is the rate in requests per second. If nil,
-	// the requests will be made as fast as possible
-	Rate *float64 // Rate is a pointer so that it can be nil
+
 }
 
 // Run executes the load test with the given options.
@@ -141,8 +136,8 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 // Body is a string of the enitre response body
 // Rather than a io.ReadCloser
 type finalResponse struct {
-	code int    // The http response code
-	body string // The response body
+	code int    
+	body string 
 }
 
 // makeRequest makes a GET request to the given path with a specified timeout.

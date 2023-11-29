@@ -18,13 +18,6 @@ func TestCall(t *testing.T) {
 
 	if code != 200 {
 		t.Errorf("Expected 200, got %d", code)
-	}
-
-	// Testing the response body
-	body := response.body
-	if body != `["es","zh","it","de"]` {
-		t.Errorf(`Expected ["es","zh","it","de"], got %s`, body)
-	}
 }
 
 func TestCallServer(t *testing.T) {
@@ -35,7 +28,7 @@ func TestCallServer(t *testing.T) {
 		Fail:    false,
 		Delay:   1 * time.Second,
 		Port:    8085,
-		Rout:    root,
+		Route:    root,
 	}
 
 	err := server.TestServer(serverOpts)
@@ -54,7 +47,9 @@ func TestCallServer(t *testing.T) {
 }
 
 func TestRunner(t *testing.T) {
-	rout := "/test2"
+  
+	route := "/test2"
+
 	rate := 1.1
 
 	serverOpts := server.TestOpts{
@@ -62,11 +57,11 @@ func TestRunner(t *testing.T) {
 		Fail:    false,
 		Delay:   1 * time.Second,
 		Port:    8086,
-		Rout:    rout,
+		Route:    route,
 	}
 
 	testOpts := Opts{
-		Path:         "http://localhost:8086" + rout,
+		Path:         "http://localhost:8086" + route,
 		Time:         10,
 		Users:        10,
 		Timeout:      10,
@@ -91,7 +86,8 @@ func TestRunner(t *testing.T) {
 }
 
 func TestCallingFailingServer(t *testing.T) {
-	rout := "/test3"
+  
+	route := "/test3"
 	rate := 1.1
 
 	serverOpts := server.TestOpts{
@@ -99,11 +95,11 @@ func TestCallingFailingServer(t *testing.T) {
 		Fail:    true,
 		Delay:   1 * time.Second,
 		Port:    8087,
-		Rout:    rout,
+		Route:    route,
 	}
 
 	testOpts := Opts{
-		Path:         "http://localhost:8087" + rout,
+		Path:         "http://localhost:8087" + route,
 		Time:         10,
 		Users:        10,
 		Timeout:      10,
@@ -125,4 +121,41 @@ func TestCallingFailingServer(t *testing.T) {
 	if len(results) != 100 {
 		t.Errorf("Expected 100 results, got %d", len(results))
 	}
+}
+
+func TestResponseBody(t *testing.T) {
+
+	route := "/test4"
+	rate := 0.5
+
+	serverOpts := server.TestOpts{
+		Message: "hello",
+		Fail:    false,
+		Delay:   1 * time.Second,
+		Port:    8088,
+		Route:    route,
+	}
+
+	testOpts := Opts{
+		Path:         "http://localhost:8088" + route,
+		Time:         2,
+		Users:        1,
+		Timeout:      10,
+		SuccessCodes: []int{200},
+		Rate:         &rate,
+	}
+
+	err := server.TestServer(serverOpts)
+	if err != nil {
+		t.Errorf("Error starting server: %s", err)
+	}
+
+	results, _ := Run(testOpts)
+  
+  for _, result := range results {
+    if result.Body != "hello" {
+      t.Errorf("Expected \"hello\" but got \"%s\"", result.Body)
+      t.Fail()
+    }
+  }
 }
