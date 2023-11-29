@@ -1,6 +1,7 @@
 package runner
 
 import (
+	"golang.org/x/exp/slices"
 	"io"
 	"net/http"
 	"sync"
@@ -8,17 +9,13 @@ import (
 )
 
 type Opts struct {
-	Path string
-	Time int
-	Users int
-	Timeout int
+	Path         string
+	Time         time.Duration
+	Users        int
+	Timeout      int
 	SuccessCodes []int
-
-	// If Rate is nil, the requests will be made as fast as possible
-	Rate *float64 
-	// Body is a string containing the result body
-	Body string
-
+	Rate         *float64 // If Rate is nil, the requests will be made as fast as possible
+	ResultBody   string
 }
 
 // Run executes the load test with the given options.
@@ -103,7 +100,7 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 		response, err := makeRequest(opts.Path, opts.Timeout)
 		responseCode := response.code
 		responseBody := response.body
-		if err != nil || !contains(opts.SuccessCodes, responseCode) || responseCode != http.StatusOK {
+		if err != nil || !slices.Contains(opts.SuccessCodes, responseCode) || responseCode != http.StatusOK {
 
 			failsCh <- 1
 
@@ -136,8 +133,8 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 // Body is a string of the enitre response body
 // Rather than a io.ReadCloser
 type finalResponse struct {
-	code int    
-	body string 
+	code int
+	body string
 }
 
 // makeRequest makes a GET request to the given path with a specified timeout.
@@ -156,8 +153,6 @@ type finalResponse struct {
 func makeRequest(path string, timeout int) (finalResponse, error) {
 	client := &http.Client{Timeout: time.Duration(timeout) * time.Second}
 
-	// Default values will be overwritten
-	// if no errors are encountered
 	result := finalResponse{
 		code: http.StatusInternalServerError,
 		body: "",
@@ -179,20 +174,4 @@ func makeRequest(path string, timeout int) (finalResponse, error) {
 	}
 
 	return result, nil
-}
-
-// contains checks if a slice of integers contains a given integer.
-//
-// Parameters:
-//   - slice: []int
-//     The slice of integers to check.
-//   - value: int
-//     The integer to check for.
-func contains(slice []int, value int) bool {
-	for _, item := range slice {
-		if item == value {
-			return true
-		}
-	}
-	return false
 }

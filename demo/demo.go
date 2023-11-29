@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	runner "github.com/JasonBoyett/spyglass/local/runner"
 )
@@ -38,7 +39,8 @@ func main() {
 
 	fmt.Println("\nEnter the duration of the test in seconds:")
 	durationInput, _ := reader.ReadString('\n')
-	duration, err := strconv.Atoi(strings.Trim(durationInput, "\n"))
+	durationInt, err := strconv.Atoi(strings.Trim(durationInput, "\n"))
+  duration := time.Duration(durationInt) * time.Second
 	if err != nil {
 		fmt.Println("Invalid input.")
 		panic(err)
