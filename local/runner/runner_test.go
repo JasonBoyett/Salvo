@@ -18,6 +18,7 @@ func TestCall(t *testing.T) {
 
 	if code != 200 {
 		t.Errorf("Expected 200, got %d", code)
+  }
 }
 
 func TestCallServer(t *testing.T) {
