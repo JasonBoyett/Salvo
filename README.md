@@ -68,7 +68,7 @@ the Go standard library.
 To see a quick demo of Salvo, clone the repo and run the following commands:
 ```shell
 cd demo
-go run demo
+go run demo.go
 ```
 This will run a quick cli demo that will allow you to run a load test on the url 
 of your choice.
