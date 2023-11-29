@@ -6,21 +6,14 @@ import (
 	"time"
 )
 
-// Opts is a struct that contains the options for the runner.
 type Opts struct {
-	// Path is the path to make the request to
 	Path string
-	// Time is the time in seconds to run the test for
 	Time int
-	// Users is the number of users to simulate
 	Users int
-	// Timeout is the timeout in seconds for each request
 	Timeout int
-	// SuccessCodes is a slice of success codes
 	SuccessCodes []int
-	// Rate is the rate in requests per second. If nil,
-	// the requests will be made as fast as possible
-	Rate *float64 //Rate is a pointer so that it can be nil
+	// If Rate is nil, the requests will be made as fast as possible
+	Rate *float64 
 }
 
 // Run executes the load test with the given options.
