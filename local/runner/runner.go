@@ -1,11 +1,12 @@
 package runner
 
 import (
-	"golang.org/x/exp/slices"
 	"io"
 	"net/http"
 	"sync"
 	"time"
+
+	"golang.org/x/exp/slices"
 )
 
 type Opts struct {
@@ -61,7 +62,6 @@ func Run(opts Opts) ([]Result, int) {
 	go func() {
 		wg.Wait()
 		close(failsCh)
-		close(resultsCh)
 	}()
 
 	failsGroup.Add(1)
@@ -99,7 +99,6 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 		start := time.Now()
 		response, err := makeRequest(opts.Path, opts.Timeout)
 		responseCode := response.code
-		responseBody := response.body
 		if err != nil || !slices.Contains(opts.SuccessCodes, responseCode) || responseCode != http.StatusOK {
 
 			failsCh <- 1
@@ -108,8 +107,10 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 				Start:   start,
 				End:     time.Now(),
 				Success: false,
+				Proto:   response.proto,
 				Code:    responseCode,
-				Body:    responseBody,
+				Body:    response.body,
+				Header:  response.header,
 			}
 
 		} else {
@@ -117,8 +118,10 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 				Start:   start,
 				End:     time.Now(),
 				Success: true,
+				Proto:   response.proto,
 				Code:    responseCode,
-				Body:    responseBody,
+				Body:    response.body,
+				Header:  response.header,
 			}
 		}
 
@@ -133,8 +136,10 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 // Body is a string of the enitre response body
 // Rather than a io.ReadCloser
 type finalResponse struct {
-	code int
-	body string
+	proto  string // The protocol version for incoming server requests.
+	code   int
+	body   string
+	header http.Header
 }
 
 // makeRequest makes a GET request to the given path with a specified timeout.
@@ -169,8 +174,10 @@ func makeRequest(path string, timeout int) (finalResponse, error) {
 	}
 
 	result = finalResponse{
-		code: response.StatusCode,
-		body: string(responseBody),
+		proto:  response.Proto,
+		code:   response.StatusCode,
+		body:   string(responseBody),
+		header: response.Header,
 	}
 
 	return result, nil
