@@ -160,3 +160,41 @@ func TestResponseBody(t *testing.T) {
     }
   }
 }
+
+func TestAcceptNonStandardCode(t *testing.T) {
+  
+	route := "/test5"
+	rate := 1.1
+
+	serverOpts := server.TestOpts{
+		Message: "you're a failure",
+		Fail:    true,
+		Delay:   1 * time.Second,
+		Port:    8089,
+		Route:    route,
+	}
+
+	testOpts := Opts{
+		Path:         "http://localhost:8089" + route,
+		Time:         10,
+		Users:        10,
+		Timeout:      10,
+		SuccessCodes: []int{500},
+		Rate:         &rate,
+	}
+
+	err := server.TestServer(serverOpts)
+	if err != nil {
+		t.Errorf("Error starting server: %s", err)
+	}
+
+	results, _ := Run(testOpts)
+
+	if CountFailures(results) != 0 {
+		t.Errorf("Expected 0 fails, got %d", CountFailures(results))
+	}
+
+	if len(results) != 100 {
+		t.Errorf("Expected 100 results, got %d", len(results))
+	}
+}

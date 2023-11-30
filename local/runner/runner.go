@@ -86,6 +86,7 @@ func Run(opts Opts) ([]Result, int) {
 }
 
 func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<- Result) {
+
 	defer wg.Done()
 	startTime := time.Now()
 
@@ -100,7 +101,7 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 		response, err := makeRequest(opts.Path, opts.Timeout)
 		responseCode := response.code
 		responseBody := response.body
-		if err != nil || !slices.Contains(opts.SuccessCodes, responseCode) || responseCode != http.StatusOK {
+		if err != nil || (!slices.Contains(opts.SuccessCodes, responseCode) && responseCode != http.StatusOK) {
 
 			failsCh <- 1
 
