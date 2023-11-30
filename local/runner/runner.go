@@ -1,11 +1,12 @@
 package runner
 
 import (
-	"golang.org/x/exp/slices"
 	"io"
 	"net/http"
 	"sync"
 	"time"
+
+	"golang.org/x/exp/slices"
 )
 
 type Opts struct {
@@ -133,8 +134,9 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 // Body is a string of the enitre response body
 // Rather than a io.ReadCloser
 type finalResponse struct {
-	code int
-	body string
+	code   int
+	body   string
+	header http.Header
 }
 
 // makeRequest makes a GET request to the given path with a specified timeout.
@@ -169,8 +171,9 @@ func makeRequest(path string, timeout int) (finalResponse, error) {
 	}
 
 	result = finalResponse{
-		code: response.StatusCode,
-		body: string(responseBody),
+		code:   response.StatusCode,
+		body:   string(responseBody),
+		header: response.Header,
 	}
 
 	return result, nil
