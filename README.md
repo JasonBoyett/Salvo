@@ -76,3 +76,7 @@ You will be prompted to enter the url you would like to test,
 the number of simulated users you would like to use, 
 the rate at which you would like the simulated users to make requests,
 the time before requests should timeout, and the duration of the test.
+
+## Contributing
+Want to contribute? That's awesome! Check out the 
+[contributing guide.](docs/contributing.md)
