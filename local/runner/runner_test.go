@@ -1,6 +1,7 @@
 package runner
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -18,7 +19,7 @@ func TestCall(t *testing.T) {
 
 	if code != 200 {
 		t.Errorf("Expected 200, got %d", code)
-  }
+	}
 }
 
 func TestCallServer(t *testing.T) {
@@ -29,7 +30,7 @@ func TestCallServer(t *testing.T) {
 		Fail:    false,
 		Delay:   1 * time.Second,
 		Port:    8085,
-		Route:    root,
+		Route:   root,
 	}
 
 	err := server.TestServer(serverOpts)
@@ -48,7 +49,6 @@ func TestCallServer(t *testing.T) {
 }
 
 func TestRunner(t *testing.T) {
-  
 	route := "/test2"
 
 	rate := 1.1
@@ -58,7 +58,7 @@ func TestRunner(t *testing.T) {
 		Fail:    false,
 		Delay:   1 * time.Second,
 		Port:    8086,
-		Route:    route,
+		Route:   route,
 	}
 
 	testOpts := Opts{
@@ -87,7 +87,6 @@ func TestRunner(t *testing.T) {
 }
 
 func TestCallingFailingServer(t *testing.T) {
-  
 	route := "/test3"
 	rate := 1.1
 
@@ -96,7 +95,7 @@ func TestCallingFailingServer(t *testing.T) {
 		Fail:    true,
 		Delay:   1 * time.Second,
 		Port:    8087,
-		Route:    route,
+		Route:   route,
 	}
 
 	testOpts := Opts{
@@ -125,7 +124,6 @@ func TestCallingFailingServer(t *testing.T) {
 }
 
 func TestResponseBody(t *testing.T) {
-
 	route := "/test4"
 	rate := 0.5
 
@@ -134,7 +132,7 @@ func TestResponseBody(t *testing.T) {
 		Fail:    false,
 		Delay:   1 * time.Second,
 		Port:    8088,
-		Route:    route,
+		Route:   route,
 	}
 
 	testOpts := Opts{
@@ -152,11 +150,12 @@ func TestResponseBody(t *testing.T) {
 	}
 
 	results, _ := Run(testOpts)
-  
-  for _, result := range results {
-    if result.Body != "hello" {
-      t.Errorf("Expected \"hello\" but got \"%s\"", result.Body)
-      t.Fail()
-    }
-  }
+
+	for _, result := range results {
+		fmt.Println(result)
+		if result.Body != "hello" {
+			t.Errorf("Expected \"hello\" but got \"%s\"", result.Body)
+			t.Fail()
+		}
+	}
 }
