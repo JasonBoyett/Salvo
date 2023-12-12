@@ -13,7 +13,6 @@ func TestCall(t *testing.T) {
 		t.Errorf("Error making request: %s", err)
 	}
 
-	// Testing the responde code
 	code := response.code
 
 	if code != 200 {
@@ -61,7 +60,7 @@ func TestRunner(t *testing.T) {
 		Route:    route,
 	}
 
-	testOpts := Opts{
+	testOpts := RunnerOpts{
 		Path:         "http://localhost:8086" + route,
 		Time:         10,
 		Users:        10,
@@ -99,7 +98,7 @@ func TestCallingFailingServer(t *testing.T) {
 		Route:    route,
 	}
 
-	testOpts := Opts{
+	testOpts := RunnerOpts{
 		Path:         "http://localhost:8087" + route,
 		Time:         10,
 		Users:        10,
@@ -137,7 +136,7 @@ func TestResponseBody(t *testing.T) {
 		Route:    route,
 	}
 
-	testOpts := Opts{
+	testOpts := RunnerOpts{
 		Path:         "http://localhost:8088" + route,
 		Time:         2,
 		Users:        1,
@@ -174,7 +173,7 @@ func TestAcceptNonStandardCode(t *testing.T) {
 		Route:    route,
 	}
 
-	testOpts := Opts{
+	testOpts := RunnerOpts{
 		Path:         "http://localhost:8089" + route,
 		Time:         10,
 		Users:        10,
