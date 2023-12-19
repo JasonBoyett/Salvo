@@ -8,36 +8,22 @@ import (
 	"time"
 )
 
-type Opts struct {
+type RunnerOpts struct {
 	Path         string
 	Time         time.Duration
 	Users        int
 	Timeout      int
 	SuccessCodes []int
-	Rate         *float64 // If Rate is nil, the requests will be made as fast as possible
-	ResultBody   string
+	// If Rate is nil, the requests will be made as fast as possible
+	Rate       *float64
+	ResultBody string
 }
 
 // Run executes the load test with the given options.
-// It returns a slice of results and the number of failed requests.
 //
-// The load test is configured using the provided options (Opts).
-//
-// Parameters:
-//   - opts: Opts
-//     The options for the load test.
-//   - Path: string
-//     The path to make the request to.
-//   - Time: int
-//     The duration in seconds to run the test for.
-//   - Users: int
-//     The number of users to simulate.
-//   - Timeout: int
-//     The timeout in seconds for each request.
-//   - Rate: *float64
-//     The rate in requests per second.
-//     If nil, the requests will be made as fast as possible.
-func Run(opts Opts) ([]Result, int) {
+//Returns:
+// A slice of results and an int number of failed requests.
+func Run(opts RunnerOpts) ([]Result, int) {
 	results := make([]Result, 0)
 	fails := 0
 
@@ -85,7 +71,7 @@ func Run(opts Opts) ([]Result, int) {
 	return results, fails
 }
 
-func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<- Result) {
+func simUser(opts RunnerOpts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<- Result) {
 
 	defer wg.Done()
 	startTime := time.Now()
@@ -129,10 +115,6 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 	}
 }
 
-// Contains the completed response
-//
-// Body is a string of the enitre response body
-// Rather than a io.ReadCloser
 type finalResponse struct {
 	code int
 	body string
@@ -140,14 +122,8 @@ type finalResponse struct {
 
 // makeRequest makes a GET request to the given path with a specified timeout.
 //
-// Parameters:
-//   - path: string
-//     The path to make the request to.
-//   - timeout: int
-//     The timeout in seconds.
-//
-// Returns:
-//   - finishedResponse
+// Returns
+//   - finalResponse
 //     A struct containing the response
 //   - error
 //     An error if one occurred during the request.

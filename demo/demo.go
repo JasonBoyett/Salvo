@@ -54,7 +54,7 @@ func main() {
 		panic(err)
 	}
 
-	opts := runner.Opts{
+	opts := runner.RunnerOpts{
 		Users:        count,
 		Path:         address,
 		Rate:         &rate,

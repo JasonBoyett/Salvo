@@ -5,15 +5,10 @@ import (
 )
 
 type Result struct {
-	// Start is the time the request was started
 	Start time.Time
-	// End is the time the request was completed
 	End time.Time
-	// Success is true if the request was successful
 	Success bool
-	// Code is the HTTP status code of the response
 	Code int
-	// The response body
 	Body string
 }
 
