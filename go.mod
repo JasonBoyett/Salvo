@@ -1,4 +1,4 @@
-module github.com/JasonBoyett/spyglass
+module github.com/JasonBoyett/salvo
 
 go 1.18
 

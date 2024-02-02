@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/JasonBoyett/salvo"
+
+message Result {
+  google.protobuf.Timestamp Start = 0;
+  google.protobuf.Timestamp End = 1;
+  bool Success = 2;
+  int32 StatusCode = 3;
+  string ResponseBody = 4;
+}
+
+message Response {
+  string RequestId = 0;
+  int32 errorCount = 1;
+  repeated Result Result = 2;
+}

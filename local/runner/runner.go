@@ -1,22 +1,13 @@
 package runner
 
 import (
-	"golang.org/x/exp/slices"
 	"io"
 	"net/http"
 	"sync"
 	"time"
-)
 
-type Opts struct {
-	Path         string
-	Time         time.Duration
-	Users        int
-	Timeout      int
-	SuccessCodes []int
-	Rate         *float64 // If Rate is nil, the requests will be made as fast as possible
-	ResultBody   string
-}
+	"golang.org/x/exp/slices"
+)
 
 // Run executes the load test with the given options.
 // It returns a slice of results and the number of failed requests.
@@ -85,40 +76,69 @@ func Run(opts Opts) ([]Result, int) {
 	return results, fails
 }
 
-func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<- Result) {
+func simUser(
+	opts Opts, wg *sync.WaitGroup,
+	failsCh chan<- int,
+	resultsCh chan<- Result,
+) {
 	defer wg.Done()
 	startTime := time.Now()
 
 	for {
-
 		elapsedTime := time.Since(startTime).Seconds()
 		if elapsedTime >= float64(opts.Time) {
 			break
 		}
 
 		start := time.Now()
-		response, err := makeRequest(opts.Path, opts.Timeout)
-		responseCode := response.code
-		responseBody := response.body
-		if err != nil || !slices.Contains(opts.SuccessCodes, responseCode) || responseCode != http.StatusOK {
+		response, err := MakeRequest(opts.Path, opts.Timeout)
+		responseCode := response.Code
+		responseBody := response.Body
+		if err != nil ||
+			responseCode != http.StatusOK {
 
 			failsCh <- 1
 
 			resultsCh <- Result{
-				Start:   start,
-				End:     time.Now(),
-				Success: false,
-				Code:    responseCode,
-				Body:    responseBody,
+				Start:        start,
+				End:          time.Now(),
+				Success:      false,
+				StatusCode:   responseCode,
+				ResponseBody: responseBody,
+			}
+
+		} else if responseCode != http.StatusOK {
+
+			failsCh <- 1
+
+			resultsCh <- Result{
+				Start:        start,
+				End:          time.Now(),
+				Success:      false,
+				StatusCode:   responseCode,
+				ResponseBody: responseBody,
+			}
+
+		} else if !slices.Contains(opts.SuccessCodes, responseCode) &&
+			opts.SuccessCodes != nil {
+
+			failsCh <- 1
+
+			resultsCh <- Result{
+				Start:        start,
+				End:          time.Now(),
+				Success:      false,
+				StatusCode:   responseCode,
+				ResponseBody: responseBody,
 			}
 
 		} else {
 			resultsCh <- Result{
-				Start:   start,
-				End:     time.Now(),
-				Success: true,
-				Code:    responseCode,
-				Body:    responseBody,
+				Start:        start,
+				End:          time.Now(),
+				Success:      true,
+				StatusCode:   responseCode,
+				ResponseBody: responseBody,
 			}
 		}
 
@@ -130,14 +150,14 @@ func simUser(opts Opts, wg *sync.WaitGroup, failsCh chan<- int, resultsCh chan<-
 
 // Contains the completed response
 //
-// Body is a string of the enitre response body
+// Body is a string of the entire response body
 // Rather than a io.ReadCloser
-type finalResponse struct {
-	code int
-	body string
+type FinalResponse struct {
+	Code int
+	Body string
 }
 
-// makeRequest makes a GET request to the given path with a specified timeout.
+// MakeRequest makes a GET request to the given path with a specified timeout.
 //
 // Parameters:
 //   - path: string
@@ -150,12 +170,12 @@ type finalResponse struct {
 //     A struct containing the response
 //   - error
 //     An error if one occurred during the request.
-func makeRequest(path string, timeout int) (finalResponse, error) {
+func MakeRequest(path string, timeout int) (FinalResponse, error) {
 	client := &http.Client{Timeout: time.Duration(timeout) * time.Second}
 
-	result := finalResponse{
-		code: http.StatusInternalServerError,
-		body: "",
+	result := FinalResponse{
+		Code: http.StatusInternalServerError,
+		Body: "",
 	}
 	response, err := client.Get(path)
 	if err != nil {
@@ -168,9 +188,9 @@ func makeRequest(path string, timeout int) (finalResponse, error) {
 		return result, err
 	}
 
-	result = finalResponse{
-		code: response.StatusCode,
-		body: string(responseBody),
+	result = FinalResponse{
+		Code: response.StatusCode,
+		Body: string(responseBody),
 	}
 
 	return result, nil

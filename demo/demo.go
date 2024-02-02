@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	runner "github.com/JasonBoyett/spyglass/local/runner"
+	runner "github.com/JasonBoyett/salvo/local/runner"
 )
 
 func main() {
