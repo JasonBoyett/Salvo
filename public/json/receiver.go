@@ -11,7 +11,7 @@ type Message struct {
 	Fails   int
 }
 
-func Recive(data []byte) (Message, error) {
+func Receive(data []byte) (Message, error) {
 	var options runner.Opts
 	err := json.Unmarshal(data, &options)
 	if err != nil {

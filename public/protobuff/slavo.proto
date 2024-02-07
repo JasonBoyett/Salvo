@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = ".";
+
+message Result {
+  google.protobuf.Timestamp Start = 1;
+  google.protobuf.Timestamp End = 2;
+  bool Success = 3;
+  int64 StatusCode = 5;
+  string ResponseBody = 6;
+}
+
+message Response {
+  int32 ErrorCount = 7;
+  repeated Result Result = 8;
+}
+
+message Options {
+  string Path = 9;
+  google.protobuf.Timestamp Start = 10;
+  int64 Users = 11;
+  int64 Timeout = 12;
+  repeated int64 SuccessCodes = 13;
+  float Rate = 14;
+  string ResultBody = 15;
+  int64 Time = 16;
+}

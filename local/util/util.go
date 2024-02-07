@@ -1,12 +1,10 @@
 package util
 
 import (
-	"fmt"
 	"os"
 )
 
 func FindDir(path string) (string, error) {
-	fmt.Println(path)
 	base, err := os.Open(path)
 	if err != nil {
 		return "", err

@@ -9,7 +9,7 @@ import (
   "github.com/JasonBoyett/salvo/local/util"
 )
 
-func send(data Message) ([]byte, error) {
+func toJsonByteArray(data Message) ([]byte, error) {
   json, err := json.Marshal(data)
   if err != nil {
     return []byte{}, err
@@ -18,7 +18,7 @@ func send(data Message) ([]byte, error) {
 }
 
 func SendStdout(w io.Writer, data Message) error {
-  json, err := send(data)
+  json, err := toJsonByteArray(data)
   if err != nil {
     return err
   }
@@ -44,13 +44,12 @@ func SendFile(data Message, path string) error {
       return fmt.Errorf("Error finding base directory")
     }
   }
-  fmt.Printf("path before panic: %s\n", path)
   if path[len(path) - 1] != os.PathSeparator {
     path = path + string(os.PathSeparator)
   }
 
   path = path + "salvo.json"
-  json, err := send(data)
+  json, err := toJsonByteArray(data)
   if err != nil {
     return err
   }

@@ -16,7 +16,7 @@ import (
 	salvoJson "github.com/JasonBoyett/salvo/public/json"
 )
 
-func TestReciver(t *testing.T) {
+func TestJsonReceiver(t *testing.T) {
 	route := "/json"
 	port := "7080"
 	protInt, _ := strconv.Atoi(port)
@@ -47,7 +47,7 @@ func TestReciver(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error marshaling data: %s", err)
 	}
-	message, err := salvoJson.Recive(json)
+	message, err := salvoJson.Receive(json)
 	if err != nil {
 		t.Errorf("Error receiving data: %s", err)
 	}
@@ -68,10 +68,10 @@ func TestReciverWithOutsideJson(t *testing.T) {
 		Fail:    false,
 		Delay:   1 * time.Second,
 		Port:    7081,
-		Route:   "/TestRecieverWithOutsideJson",
+		Route:   "/TestReceiverWithOutsideJson",
 	}
 
-	path := "test_reciever.json"
+	path := "test_receiver.json"
 	json, err := os.ReadFile(path)
 	if err != nil {
 		t.Errorf("Error reading file: %s", err)
@@ -84,7 +84,7 @@ func TestReciverWithOutsideJson(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error marshaling data: %s", err)
 	}
-	message, err := salvoJson.Recive(json)
+	message, err := salvoJson.Receive(json)
 	if err != nil {
 		t.Errorf("Error receiving data: %s", err)
 	}
@@ -98,7 +98,7 @@ func TestReciverWithOutsideJson(t *testing.T) {
 	}
 }
 
-func TestSenderStdout(t *testing.T) {
+func TestJsonSenderStdout(t *testing.T) {
 	var out bytes.Buffer
 	resultOne := runner.Result{
 		Start:        time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC),
@@ -153,8 +153,8 @@ func TestSenderStdout(t *testing.T) {
 	}
 }
 
-func TestSenderFile(t *testing.T) {
-	// section one write to file
+func TestJsonSenderFile(t *testing.T) {
+	// section 1 write to file
 	resultOne := runner.Result{
 		Start:        time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC),
 		End:          time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC),
@@ -186,7 +186,6 @@ func TestSenderFile(t *testing.T) {
 		t.Errorf("Error getting file info: %s", err)
 	}
 	path, err = filepath.Abs(info.Name())
-	fmt.Println(path)
 	if err != nil {
 		t.Errorf("Error getting absolute path: %s", err)
 	}
@@ -195,7 +194,7 @@ func TestSenderFile(t *testing.T) {
 		t.Errorf("Error sending to file: %s", err)
 	}
 
-	// section two read from file test values and delete file
+	// section 2 read from file test values and delete file
 	file, err := os.Open(path + "/salvo.json")
 	if err != nil {
 		t.Errorf("Error opening file: %s", err)

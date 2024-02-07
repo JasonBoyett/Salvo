@@ -2,6 +2,7 @@ package runner
 
 import (
 	"time"
+
 )
 
 type Result struct {
@@ -25,3 +26,4 @@ func CountFailures(results []Result) int {
 	}
 	return fails
 }
+
