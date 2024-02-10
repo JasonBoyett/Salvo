@@ -57,7 +57,7 @@ func main() {
 	opts := runner.Opts{
 		Users:        count,
 		Path:         address,
-		Rate:         &rate,
+		Rate:         rate,
 		Timeout:      timeout,
 		Time:         duration,
 		SuccessCodes: []int{200},

@@ -20,7 +20,6 @@ func TestJsonReceiver(t *testing.T) {
 	route := "/json"
 	port := "7080"
 	protInt, _ := strconv.Atoi(port)
-	rate := 1.0
 
 	testOpts := runner.Opts{
 		Path:         "http://localhost:" + port + route,
@@ -28,7 +27,7 @@ func TestJsonReceiver(t *testing.T) {
 		Users:        1,
 		Timeout:      10,
 		SuccessCodes: []int{200},
-		Rate:         &rate,
+		Rate:         1.1,
 	}
 
 	serverOpts := server.TestOpts{

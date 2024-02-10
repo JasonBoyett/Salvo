@@ -23,7 +23,7 @@ message Options {
   int64 Users = 11;
   int64 Timeout = 12;
   repeated int64 SuccessCodes = 13;
-  float Rate = 14;
+  float64 Rate = 14;
   string ResultBody = 15;
   int64 Time = 16;
 }

@@ -25,9 +25,9 @@ import (
 //     The number of users to simulate.
 //   - Timeout: int
 //     The timeout in seconds for each request.
-//   - Rate: *float64
+//   - Rate: float64
 //     The rate in requests per second.
-//     If nil, the requests will be made as fast as possible.
+//     If Rate is 0, the requests will be made as fast as possible.
 func Run(opts Opts) ([]Result, int) {
 	results := make([]Result, 0)
 	fails := 0
@@ -142,8 +142,8 @@ func simUser(
 			}
 		}
 
-		if opts.Rate != nil {
-			time.Sleep(time.Duration(1 / *opts.Rate) * time.Second)
+		if opts.Rate != 0 {
+			time.Sleep(time.Duration(1 / opts.Rate) * time.Second)
 		}
 	}
 }

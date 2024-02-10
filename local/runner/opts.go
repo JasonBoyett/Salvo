@@ -10,6 +10,6 @@ type Opts struct {
 	Users        int
 	Timeout      int
 	SuccessCodes []int
-	Rate         *float64 // If Rate is nil, the requests will be made as fast as possible
+	Rate         float64 // If Rate is 0, the requests will be made as fast as possible
 }
 

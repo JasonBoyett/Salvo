@@ -23,7 +23,6 @@ func TestProtobuffReceiver(t *testing.T) {
 	route := "/protobuff"
 	port := "6080"
 	protInt, _ := strconv.Atoi(port)
-	rate := 1.0
 
 	testOpts := runner.Opts{
 		Path:         "http://localhost:" + port + route,
@@ -31,7 +30,7 @@ func TestProtobuffReceiver(t *testing.T) {
 		Users:        1,
 		Timeout:      10,
 		SuccessCodes: []int{200},
-		Rate:         &rate,
+		Rate:         1.0,
 	}
 
 	serverOpts := server.TestOpts{

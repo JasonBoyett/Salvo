@@ -165,7 +165,7 @@ type Options struct {
 	Users        int64                `protobuf:"varint,11,opt,name=Users,proto3" json:"Users,omitempty"`
 	Timeout      int64                `protobuf:"varint,12,opt,name=Timeout,proto3" json:"Timeout,omitempty"`
 	SuccessCodes []int64              `protobuf:"varint,13,rep,packed,name=SuccessCodes,proto3" json:"SuccessCodes,omitempty"`
-	Rate         float32              `protobuf:"fixed32,14,opt,name=Rate,proto3" json:"Rate,omitempty"`
+	Rate         float64              `protobuf:"fixed64,14,opt,name=Rate,proto3" json:"Rate,omitempty"`
 	ResultBody   string               `protobuf:"bytes,15,opt,name=ResultBody,proto3" json:"ResultBody,omitempty"`
 	Time         int64                `protobuf:"varint,16,opt,name=Time,proto3" json:"Time,omitempty"`
 }
@@ -237,7 +237,7 @@ func (x *Options) GetSuccessCodes() []int64 {
 	return nil
 }
 
-func (x *Options) GetRate() float32 {
+func (x *Options) GetRate() float64 {
 	if x != nil {
 		return x.Rate
 	}

@@ -51,8 +51,6 @@ func TestRunner(t *testing.T) {
 
 	route := "/test2"
 
-	rate := 1.1
-
 	serverOpts := server.TestOpts{
 		Message: "hello",
 		Fail:    false,
@@ -67,7 +65,7 @@ func TestRunner(t *testing.T) {
 		Users:        10,
 		Timeout:      10,
 		SuccessCodes: []int{200},
-		Rate:         &rate,
+		Rate:         1.1,
 	}
 
 	err := server.TestServer(serverOpts)
@@ -89,7 +87,6 @@ func TestRunner(t *testing.T) {
 func TestCallingFailingServer(t *testing.T) {
 
 	route := "/test3"
-	rate := 1.1
 
 	serverOpts := server.TestOpts{
 		Message: "you're a failure",
@@ -105,7 +102,7 @@ func TestCallingFailingServer(t *testing.T) {
 		Users:        10,
 		Timeout:      10,
 		SuccessCodes: []int{200},
-		Rate:         &rate,
+		Rate:         1.1,
 	}
 
 	err := server.TestServer(serverOpts)
@@ -127,7 +124,6 @@ func TestCallingFailingServer(t *testing.T) {
 func TestResponseBody(t *testing.T) {
 
 	route := "/test4"
-	rate := 0.5
 
 	serverOpts := server.TestOpts{
 		Message: "hello",
@@ -143,7 +139,7 @@ func TestResponseBody(t *testing.T) {
 		Users:        1,
 		Timeout:      10,
 		SuccessCodes: []int{200},
-		Rate:         &rate,
+		Rate:         1.1,
 	}
 
 	err := server.TestServer(serverOpts)
