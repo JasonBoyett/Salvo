@@ -19,7 +19,7 @@ func main() {
 
 	fmt.Println("\nEnter the url to test:")
 	address, _ := reader.ReadString('\n')
-  address = strings.Trim(address, "\n")
+	address = strings.Trim(address, "\n")
 
 	fmt.Println("Enter the number of users to create:")
 	countInput, _ := reader.ReadString('\n')
@@ -40,7 +40,7 @@ func main() {
 	fmt.Println("\nEnter the duration of the test in seconds:")
 	durationInput, _ := reader.ReadString('\n')
 	durationInt, err := strconv.Atoi(strings.Trim(durationInput, "\n"))
-  duration := time.Duration(durationInt) * time.Second
+	duration := time.Duration(durationInt) * time.Second
 	if err != nil {
 		fmt.Println("Invalid input.")
 		panic(err)

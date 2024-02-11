@@ -1,1 +1,8 @@
-{"Path":"http://localhost:7081/TestReceiverWithOutsideJson","Time":1,"Users":1,"Timeout":10,"SuccessCodes": [200],"Rate":1.0}
+{
+  "path": "http://localhost:7081/TestReceiverWithOutsideJson",
+  "time": 1,
+  "users": 1,
+  "timeout": 10,
+  "successCodes": [200],
+  "rate": 1.0
+}

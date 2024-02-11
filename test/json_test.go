@@ -129,25 +129,25 @@ func TestJsonSenderStdout(t *testing.T) {
 		t.Errorf("Error sending to stdout: %s", err)
 	}
 
-	if strings.Contains(out.String(), `"ResponseBody":"test"`) == false {
+	if strings.Contains(out.String(), `"responseBody":"test"`) == false {
 		t.Errorf("Expected test, got %s", out.String())
 	}
-	if strings.Contains(out.String(), `"ResponseBody":"foo"`) == false {
+	if strings.Contains(out.String(), `"responseBody":"foo"`) == false {
 		t.Errorf("Expected test, got %s", out.String())
 	}
-	if strings.Contains(out.String(), `"ResponseBody":"bar"`) == false {
+	if strings.Contains(out.String(), `"responseBody":"bar"`) == false {
 		t.Errorf("Expected test, got %s", out.String())
 	}
-	if strings.Contains(out.String(), `"Success":true`) == false {
+	if strings.Contains(out.String(), `"success":true`) == false {
 		t.Errorf("Expected test, got %s", out.String())
 	}
-	if strings.Contains(out.String(), `"StatusCode":200`) == false {
+	if strings.Contains(out.String(), `"statusCode":200`) == false {
 		t.Errorf("Expected test, got %s", out.String())
 	}
-	if strings.Contains(out.String(), `"StatusCode":23`) == false {
+	if strings.Contains(out.String(), `"statusCode":23`) == false {
 		t.Errorf("Expected test, got %s", out.String())
 	}
-	if strings.Contains(out.String(), `"StatusCode":42`) == false {
+	if strings.Contains(out.String(), `"statusCode":42`) == false {
 		t.Errorf("Expected test, got %s", out.String())
 	}
 }
@@ -211,21 +211,21 @@ func TestJsonSenderFile(t *testing.T) {
 	for _, result := range message.Results {
 		if strings.Contains(
 			string(json),
-			fmt.Sprintf(`"ResponseBody":"%s"`, result.ResponseBody),
+			fmt.Sprintf(`"responseBody":"%s"`, result.ResponseBody),
 		) == false {
 			t.Errorf("Expected %s, got %s",
-				fmt.Sprintf(`"ResponseBody":"%s"`, result.ResponseBody),
+				fmt.Sprintf(`"responseBody":"%s"`, result.ResponseBody),
 				string(json))
 		}
 		if strings.Contains(
 			string(json),
-      fmt.Sprintf(`"Success":%t`, result.Success),
+			fmt.Sprintf(`"success":%t`, result.Success),
 		) == false {
 			t.Errorf("Expected %s, got %s", strconv.FormatBool(result.Success), string(json))
 		}
 		if strings.Contains(
 			string(json),
-      fmt.Sprintf(`"StatusCode":%d`, result.StatusCode),
+			fmt.Sprintf(`"statusCode":%d`, result.StatusCode),
 		) == false {
 			t.Errorf("Expected %d, got %s", result.StatusCode, string(json))
 		}
@@ -233,6 +233,6 @@ func TestJsonSenderFile(t *testing.T) {
 
 	err = os.Remove(jsonPath)
 	if err != nil {
-	  t.Errorf("Error removing file: %s", err)
+		t.Errorf("Error removing file: %s", err)
 	}
 }

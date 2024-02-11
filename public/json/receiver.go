@@ -7,8 +7,8 @@ import (
 )
 
 type Message struct {
-	Results []runner.Result
-	Fails   int
+	Results []runner.Result `json:"results"`
+	Fails   int             `json:"fails"`
 }
 
 func Receive(data []byte) (Message, error) {

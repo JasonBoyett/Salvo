@@ -2,15 +2,14 @@ package runner
 
 import (
 	"time"
-
 )
 
 type Result struct {
-	Start time.Time
-	End time.Time
-	Success bool
-	StatusCode int
-	ResponseBody string
+	Start        time.Time `json:"start"`
+	End          time.Time `json:"end"`
+	Success      bool      `json:"success"`
+	StatusCode   int       `json:"statusCode"`
+	ResponseBody string    `json:"responseBody"`
 }
 
 func (r Result) Duration() time.Duration {
@@ -26,4 +25,3 @@ func CountFailures(results []Result) int {
 	}
 	return fails
 }
-

@@ -5,11 +5,12 @@ import (
 )
 
 type Opts struct {
-	Path         string
-	Time         time.Duration // The time between requests
-	Users        int
-	Timeout      int
-	SuccessCodes []int
-	Rate         float64 // If Rate is 0, the requests will be made as fast as possible
+	Path string        `json:"path"`
+	Time time.Duration `json:"time"`
+	// The time between requests
+	Users        int     `json:"users"`
+	Timeout      int     `json:"timeout"`
+	SuccessCodes []int   `json:"successCodes"`
+	Rate         float64 `json:"rate"`
+	// If Rate is 0, the requests will be made as fast as possible
 }
-
