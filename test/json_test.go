@@ -48,15 +48,15 @@ func TestJsonReceiver(t *testing.T) {
 	}
 	message, err := salvoJson.Receive(json)
 	if err != nil {
-		t.Errorf("Error receiving data: %s", err)
+		t.Fatalf("Error receiving data: %s", err)
 	}
 	if message.Fails != 0 {
-		t.Errorf("Expected 0 fails, got %d", message.Fails)
+		t.Fatalf("Expected 0 fails, got %d", message.Fails)
 	}
 
 	result := message.Results[0]
 	if result.ResponseBody != "json test1" {
-		t.Errorf("Expected json test1, got %s", result.ResponseBody)
+		t.Fatalf("Expected json test1, got %s", result.ResponseBody)
 	}
 }
 
@@ -85,15 +85,15 @@ func TestReciverWithOutsideJson(t *testing.T) {
 	}
 	message, err := salvoJson.Receive(json)
 	if err != nil {
-		t.Errorf("Error receiving data: %s", err)
+		t.Fatalf("Error receiving data: %s", err)
 	}
 	if message.Fails != 0 {
-		t.Errorf("Expected 0 fails, got %d", message.Fails)
+		t.Fatalf("Expected 0 fails, got %d", message.Fails)
 	}
 
 	result := message.Results[0]
 	if result.ResponseBody != "json test2" {
-		t.Errorf("Expected json test2, got %s", result.ResponseBody)
+		t.Fatalf("Expected json test2, got %s", result.ResponseBody)
 	}
 }
 
@@ -120,7 +120,7 @@ func TestJsonSenderStdout(t *testing.T) {
 		Success:      true,
 		ResponseBody: "bar",
 	}
-	message := salvoJson.Message{
+	message := runner.Message{
 		Results: []runner.Result{resultOne, resultTwo, resultThree},
 		Fails:   0,
 	}
@@ -130,25 +130,25 @@ func TestJsonSenderStdout(t *testing.T) {
 	}
 
 	if strings.Contains(out.String(), `"responseBody":"test"`) == false {
-		t.Errorf("Expected test, got %s", out.String())
+		t.Fatalf("Expected test, got %s", out.String())
 	}
 	if strings.Contains(out.String(), `"responseBody":"foo"`) == false {
-		t.Errorf("Expected test, got %s", out.String())
+		t.Fatalf("Expected test, got %s", out.String())
 	}
 	if strings.Contains(out.String(), `"responseBody":"bar"`) == false {
-		t.Errorf("Expected test, got %s", out.String())
+		t.Fatalf("Expected test, got %s", out.String())
 	}
 	if strings.Contains(out.String(), `"success":true`) == false {
-		t.Errorf("Expected test, got %s", out.String())
+		t.Fatalf("Expected test, got %s", out.String())
 	}
 	if strings.Contains(out.String(), `"statusCode":200`) == false {
-		t.Errorf("Expected test, got %s", out.String())
+		t.Fatalf("Expected test, got %s", out.String())
 	}
 	if strings.Contains(out.String(), `"statusCode":23`) == false {
-		t.Errorf("Expected test, got %s", out.String())
+		t.Fatalf("Expected test, got %s", out.String())
 	}
 	if strings.Contains(out.String(), `"statusCode":42`) == false {
-		t.Errorf("Expected test, got %s", out.String())
+		t.Fatalf("Expected test, got %s", out.String())
 	}
 }
 
@@ -175,7 +175,7 @@ func TestJsonSenderFile(t *testing.T) {
 		Success:      true,
 		ResponseBody: "bar",
 	}
-	message := salvoJson.Message{
+	message := runner.Message{
 		Results: []runner.Result{resultOne, resultTwo, resultThree},
 		Fails:   0,
 	}
@@ -213,7 +213,7 @@ func TestJsonSenderFile(t *testing.T) {
 			string(json),
 			fmt.Sprintf(`"responseBody":"%s"`, result.ResponseBody),
 		) == false {
-			t.Errorf("Expected %s, got %s",
+			t.Fatalf("Expected %s, got %s",
 				fmt.Sprintf(`"responseBody":"%s"`, result.ResponseBody),
 				string(json))
 		}
@@ -221,13 +221,13 @@ func TestJsonSenderFile(t *testing.T) {
 			string(json),
 			fmt.Sprintf(`"success":%t`, result.Success),
 		) == false {
-			t.Errorf("Expected %s, got %s", strconv.FormatBool(result.Success), string(json))
+			t.Fatalf("Expected %s, got %s", strconv.FormatBool(result.Success), string(json))
 		}
 		if strings.Contains(
 			string(json),
 			fmt.Sprintf(`"statusCode":%d`, result.StatusCode),
 		) == false {
-			t.Errorf("Expected %d, got %s", result.StatusCode, string(json))
+			t.Fatalf("Expected %d, got %s", result.StatusCode, string(json))
 		}
 	}
 

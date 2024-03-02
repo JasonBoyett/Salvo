@@ -1,7 +1,7 @@
 // This is meant to demo the current state of the project.
 // Feel free to change or delete this when the CLI application is ready.
 // If you do modify or delete this file, please update the README.md
-package main
+package demo
 
 import (
 	"bufio"
@@ -57,7 +57,7 @@ func main() {
 	opts := runner.Opts{
 		Users:        count,
 		Path:         address,
-		Rate:         rate,
+		Rate:         float32(rate),
 		Timeout:      timeout,
 		Time:         duration,
 		SuccessCodes: []int{200},

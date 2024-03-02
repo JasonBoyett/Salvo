@@ -4,13 +4,11 @@ import (
 	"github.com/JasonBoyett/salvo/local/runner"
 )
 
-type Message struct {
-	Results []runner.Result `json:"results"`
-	Fails   int             `json:"fails"`
-}
-
-func Receive(o *Options) Message {
+func Receive(o *Options) runner.Message {
 	runnerOpts := ParseOptsProtobuff(o)
 	result, fails := runner.Run(*runnerOpts)
-	return Message{result, fails}
+	return runner.Message{
+		Results: result,
+		Fails:   fails,
+	}
 }

@@ -1,4 +1,4 @@
-package salvo
+package main
 
 import (
 	"flag"
@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-  Main()
+	Main()
 }
 
 func Main() {
@@ -33,7 +33,7 @@ func Main() {
 	if *isFile {
 		handleFile(*filePath, *optsString, *isJson)
 	} else {
-    handleStdOut(*filePath, *optsString, *isJson)
+		handleStdOut(*filePath, *optsString, *isJson)
 	}
 }
 

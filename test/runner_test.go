@@ -17,7 +17,7 @@ func TestCall(t *testing.T) {
 	code := response.Code
 
 	if code != 200 {
-		t.Errorf("Expected 200, got %d", code)
+		t.Fatalf("Expected 200, got %d", code)
 	}
 }
 
@@ -43,7 +43,7 @@ func TestCallServer(t *testing.T) {
 		t.Errorf("Error making request: %s", err)
 	}
 	if code != 200 {
-		t.Errorf("Expected 200, got %d", code)
+		t.Fatalf("Expected 200, got %d", code)
 	}
 }
 
@@ -76,11 +76,11 @@ func TestRunner(t *testing.T) {
 	results, fails := runner.Run(testOpts)
 
 	if fails != 0 {
-		t.Errorf("Expected 0 fails, got %d", fails)
+		t.Fatalf("Expected 0 fails, got %d", fails)
 	}
 
 	if len(results) != 100 {
-		t.Errorf("Expected 100 results, got %d", len(results))
+		t.Fatalf("Expected 100 results, got %d", len(results))
 	}
 }
 
@@ -113,11 +113,11 @@ func TestCallingFailingServer(t *testing.T) {
 	results, _ := runner.Run(testOpts)
 
 	if runner.CountFailures(results) != 100 {
-		t.Errorf("Expected 100 fails, got %d", runner.CountFailures(results))
+		t.Fatalf("Expected 100 fails, got %d", runner.CountFailures(results))
 	}
 
 	if len(results) != 100 {
-		t.Errorf("Expected 100 results, got %d", len(results))
+		t.Fatalf("Expected 100 results, got %d", len(results))
 	}
 }
 
@@ -151,8 +151,7 @@ func TestResponseBody(t *testing.T) {
 
 	for _, result := range results {
 		if result.ResponseBody != "hello" {
-			t.Errorf("Expected \"hello\" but got \"%s\"", result.ResponseBody)
-			t.Fail()
+			t.Fatalf("Expected \"hello\" but got \"%s\"", result.ResponseBody)
 		}
 	}
 }
