@@ -165,7 +165,7 @@ type Options struct {
 	Users        int64                `protobuf:"varint,11,opt,name=Users,proto3" json:"Users,omitempty"`
 	Timeout      int64                `protobuf:"varint,12,opt,name=Timeout,proto3" json:"Timeout,omitempty"`
 	SuccessCodes []int64              `protobuf:"varint,13,rep,packed,name=SuccessCodes,proto3" json:"SuccessCodes,omitempty"`
-	Rate         float64              `protobuf:"fixed64,14,opt,name=Rate,proto3" json:"Rate,omitempty"`
+	Rate         float32              `protobuf:"fixed32,14,opt,name=Rate,proto3" json:"Rate,omitempty"`
 	ResultBody   string               `protobuf:"bytes,15,opt,name=ResultBody,proto3" json:"ResultBody,omitempty"`
 	Time         int64                `protobuf:"varint,16,opt,name=Time,proto3" json:"Time,omitempty"`
 }
@@ -237,7 +237,7 @@ func (x *Options) GetSuccessCodes() []int64 {
 	return nil
 }
 
-func (x *Options) GetRate() float64 {
+func (x *Options) GetRate() float32 {
 	if x != nil {
 		return x.Rate
 	}
@@ -261,7 +261,7 @@ func (x *Options) GetTime() int64 {
 var File_salvo_proto protoreflect.FileDescriptor
 
 var file_salvo_proto_rawDesc = []byte{
-	0x0a, 0x0b, 0x73, 0x6c, 0x61, 0x76, 0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1f, 0x67,
+	0x0a, 0x0b, 0x73, 0x61, 0x6c, 0x76, 0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1f, 0x67,
 	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74,
 	0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xc6,
 	0x01, 0x0a, 0x06, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x12, 0x30, 0x0a, 0x05, 0x53, 0x74, 0x61,
